@@ -1,0 +1,34 @@
+name: Unit Tests Check
+
+#Esto responde a la pregunta "Cuando se ejecuta?"
+on:
+    push:
+        branches: [ "main" ] #Se activa cuando se sube algo a la
+                             #rama principal
+    pull_request:
+        branches: [ "main" ] #Se activa cuando se propone un
+                             #cambio en la rama principal
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest #usa un servidor linux de github
+    
+        steps:
+            - name: Check del código
+              uses: actions/checkout@v4 #Descarga el código al 
+                                        #servidor
+
+            - name: Configurar .NET
+              uses: actions/setup-dotnet@v4 #Instala el SDK de .NET (el "SDK" es la verión de 
+                                            #desarrollo de .NET)
+              with:
+                dotnet-version: 8.0.125
+            
+            - name: Restaurar dependencias
+              run: dotnet restore #Descarga paquetes NuGet
+            
+            - name: Compilar
+              run: dotnet build --no-restore #Esto convierte el código de C# a binario
+            
+            - name: Ejecutar Tests
+              run: dotnet test --no-build --verbosity normal #Corre xUnit
