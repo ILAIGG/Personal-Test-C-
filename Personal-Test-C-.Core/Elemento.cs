@@ -1,4 +1,4 @@
-namespace Personal_Test_C_;
+namespace Personal_Test_C_.Core;
 
 public class Elemento
 {
