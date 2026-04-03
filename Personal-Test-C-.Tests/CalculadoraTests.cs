@@ -8,7 +8,7 @@ public class CalculadoraTests
     //"[Fact]" Esto indica que este método es una prueba. USAR AL
     //INICIO DE TODOS LOS MÉTODOS DE TESTSSSSSS!!!!!!!!
     [Fact] 
-    public void _Calculadora_Sumar_DosNumeros()
+    public void Calculadora_Sumar_DosNumeros()
     {
         var calc = new Calculadora();
 
