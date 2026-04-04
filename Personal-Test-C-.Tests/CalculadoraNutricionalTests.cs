@@ -8,15 +8,12 @@ public class CalculadoraNutricionalTests
     [Fact]
     public void CalcularPorcion_CalculaCorrectamentePara50Gramos()
     {
-        // Arrange
-        var calc = new CalculadoraNutricional();
+        var calc = new CalculadoraNutricional(new CalculadorProporcionalSimple());
         var elemento = new Elemento("Banana", 10f, 5f, 2f, 1f, 3f, 4f, 0.5f, 6f, 0.8f, 2.5f, 7f, 8f);
         float gramos = 50f;
 
-        // Act
         var resultado = calc.CalcularPorcion(elemento, gramos);
 
-        // Assert
         Assert.Equal("Banana", resultado[0]);
         Assert.Equal(50f, resultado[1]);
         Assert.Equal(5f, resultado[2]); //Hg: 10 * 0.5
@@ -36,15 +33,12 @@ public class CalculadoraNutricionalTests
     [Fact]
     public void CalcularPorcion_CalculaCorrectamentePara100Gramos()
     {
-        // Arrange
-        var calc = new CalculadoraNutricional();
+        var calc = new CalculadoraNutricional(new CalculadorProporcionalSimple());
         var elemento = new Elemento("Manzana", 20f, 10f, 4f, 2f, 6f, 8f, 1f, 12f, 1.6f, 5f, 14f, 16f);
         float gramos = 100f;
 
-        // Act
         var resultado = calc.CalcularPorcion(elemento, gramos);
 
-        // Assert
         Assert.Equal("Manzana", resultado[0]);
         Assert.Equal(100f, resultado[1]);
         Assert.Equal(20f, resultado[2]); //Hg sin cambio
@@ -64,15 +58,12 @@ public class CalculadoraNutricionalTests
     [Fact]
     public void CalcularPorcion_CalculaCorrectamentePara25Gramos()
     {
-        // Arrange
-        var calc = new CalculadoraNutricional();
+        var calc = new CalculadoraNutricional(new CalculadorProporcionalSimple());
         var elemento = new Elemento("Naranja", 15f, 7.5f, 3f, 1.5f, 4.5f, 6f, 0.75f, 9f, 1.2f, 3.75f, 10.5f, 12f);
         float gramos = 25f;
 
-        // Act
         var resultado = calc.CalcularPorcion(elemento, gramos);
 
-        // Assert
         Assert.Equal("Naranja", resultado[0]);
         Assert.Equal(25f, resultado[1]);
         Assert.Equal(3.75f, resultado[2]); //15 * 0.25
@@ -87,5 +78,79 @@ public class CalculadoraNutricionalTests
         Assert.Equal(0.9375f, resultado[11]); //3.75 * 0.25
         Assert.Equal(2.625f, resultado[12]); //10.5 * 0.25
         Assert.Equal(3f, resultado[13]); //12 * 0.25
+    }
+
+    [Fact]
+    public void CalcularPorcion_IntOverload_CalculaCorrectamente()
+    {
+        var calc = new CalculadoraNutricional(new CalculadorProporcionalSimple());
+        var elemento = new Elemento("Pera", 12f, 6f, 2.4f, 1.2f, 3.6f, 4.8f, 0.6f, 7.2f, 0.96f, 3f, 8.4f, 9.6f);
+        int gramos = 75;
+
+        var resultado = calc.CalcularPorcion(elemento, gramos);
+
+        Assert.Equal("Pera", resultado[0]);
+        Assert.Equal(75f, resultado[1]); //convertido a float
+        Assert.Equal(9f, resultado[2]); //12 * 0.75
+    }
+
+    [Fact]
+    public void Elemento_Constructor_ValidaValoresNegativos_LanzaExcepcion()
+    {
+        Assert.Throws<ArgumentException>(() => new Elemento("Test", -1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+    }
+
+    [Fact]
+    public void Elemento_Constructor_ValidaNombreVacio_LanzaExcepcion()
+    {
+        Assert.Throws<ArgumentException>(() => new Elemento("", 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+    }
+
+    [Fact]
+    public void Elemento_Constructor_ValidaPtsNegativo_LanzaExcepcion()
+    {
+        Assert.Throws<ArgumentException>(() => new Elemento("Test", 0f, -1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+    }
+
+    [Fact]
+    public void Elemento_Constructor_ValidaTodosValoresPositivos_NoLanzaExcepcion()
+    {
+        var elemento = new Elemento("Valido", 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
+        Assert.Equal("Valido", elemento.Name);
+        Assert.Equal(1f, elemento.Hg);
+    }
+
+    [Fact]
+    public void CalculadoraNutricional_Constructor_CalculadorNulo_LanzaExcepcion()
+    {
+        Assert.Throws<ArgumentNullException>(() => new CalculadoraNutricional(null));
+    }
+
+    [Fact]
+    public void CalcularPorcion_UsaCalculadorProporcional_Correctamente()
+    {
+        //Utiliza un mock o implementación simple para verificar que se llama al calculador
+        var calculador = new CalculadorProporcionalSimple();
+        var calc = new CalculadoraNutricional(calculador);
+        var elemento = new Elemento("Test", 10f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
+        float gramos = 50f;
+
+        var resultado = calc.CalcularPorcion(elemento, gramos);
+
+        //Verifica que el primer valor calculado es correcto
+        Assert.Equal(5f, resultado[2]); //Hg: 10 * 0.5
+    }
+
+    [Fact]
+    public void CalcularPorcion_IntOverload_ConvierteCorrectamente()
+    {
+        var calc = new CalculadoraNutricional(new CalculadorProporcionalSimple());
+        var elemento = new Elemento("Test", 8f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f);
+        int gramos = 25;
+
+        var resultado = calc.CalcularPorcion(elemento, gramos);
+
+        Assert.Equal(25f, resultado[1]); // Convertido a float
+        Assert.Equal(2f, resultado[2]); // 8 * 0.25
     }
 }

@@ -20,6 +20,20 @@ public class Elemento
                     float vitA, float vitC, float vitD, float ca, float fe, 
                     float fibra, float potasio, float agua)
     {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name cannot be null or empty", nameof(name));
+        if (hg < 0) throw new ArgumentException("Hg must be non-negative", nameof(hg));
+        if (pts < 0) throw new ArgumentException("Pts must be non-negative", nameof(pts));
+        if (lp < 0) throw new ArgumentException("Lp must be non-negative", nameof(lp));
+        if (na < 0) throw new ArgumentException("Na must be non-negative", nameof(na));
+        if (vitA < 0) throw new ArgumentException("VitA must be non-negative", nameof(vitA));
+        if (vitC < 0) throw new ArgumentException("VitC must be non-negative", nameof(vitC));
+        if (vitD < 0) throw new ArgumentException("VitD must be non-negative", nameof(vitD));
+        if (ca < 0) throw new ArgumentException("Ca must be non-negative", nameof(ca));
+        if (fe < 0) throw new ArgumentException("Fe must be non-negative", nameof(fe));
+        if (fibra < 0) throw new ArgumentException("Fibra must be non-negative", nameof(fibra));
+        if (potasio < 0) throw new ArgumentException("Potasio must be non-negative", nameof(potasio));
+        if (agua < 0) throw new ArgumentException("Agua must be non-negative", nameof(agua));
+
         Name = name;
         Hg = hg;
         Pts = pts;
